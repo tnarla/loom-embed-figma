@@ -24,6 +24,27 @@ if (data) {
 }
 
 figma.ui.onmessage = (msg) => {
+  if (msg.type === "view") {
+    const embeds = figma.currentPage.findChildren(n => n.name === "Loom Embed");
+
+    const embedsToSend = [];
+
+    for (let i = 0; i < embeds.length; i++) {
+      const img = embeds[i].children[0].fills;
+      console.log("link", embeds[i].children[2].children.hyperlink);
+      const title = embeds[i].children[1].characters;
+      const location = {x : embeds[i].x, y: embeds[i].y};
+      embedsToSend.push({img, title,location });
+    }
+    figma.ui.postMessage({ type: "view", embeds: embedsToSend });
+
+  }
+
+  if (msg.type === "move") {
+    console.log(msg.location);
+
+    figma.viewport.center = {x: msg.location.x + 272, y: msg.location.y + 204};
+  }
   if (msg.type === "create") {
     data = msg.data;
     let imageHash = figma.createImage(new Uint8Array(data.thumbnailHash)).hash;
@@ -130,5 +151,4 @@ figma.ui.onmessage = (msg) => {
     linkFrame.appendChild(watchOnLoom);
   }
 
-  // figma.closePlugin();
 };
