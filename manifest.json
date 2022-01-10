@@ -1,0 +1,10 @@
+{
+  "name": "Loom Embed",
+  "id": "1050134017138821899",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "editorType": [
+    "figma"
+  ],
+  "ui": "dist/index.html"
+}

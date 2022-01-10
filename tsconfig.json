@@ -1,0 +1,14 @@
+{
+  "include": ["code.ts"],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "jsx": "react",
+    "target": "es6",
+    "lib": ["es6"],
+    "outFile": "./dist/code.js",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/@figma"
+    ]
+  }
+}
