@@ -1,4 +1,4 @@
-figma.showUI(__html__);
+figma.showUI(__html__, { width: 381, height: 81 });
 
 // Load FONTS
 async function loadFonts() {
