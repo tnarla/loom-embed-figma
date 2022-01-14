@@ -72,8 +72,9 @@ figma.ui.onmessage = (msg) => {
       ];
     }
 
-    let darkOverlay = figma.getLocalPaintStyles()
-    .find((effect) => effect.name === "DarkOverlay");
+    let darkOverlay = figma
+      .getLocalPaintStyles()
+      .find((effect) => effect.name === "DarkOverlay");
 
     if (!darkOverlay) {
       darkOverlay = figma.createPaintStyle();
@@ -92,7 +93,6 @@ figma.ui.onmessage = (msg) => {
         },
       ];
     }
-    
 
     data = msg.data;
     let imageHash = figma.createImage(new Uint8Array(data.thumbnailHash)).hash;
@@ -905,6 +905,8 @@ figma.ui.onmessage = (msg) => {
       buttonText.textAutoResize = "WIDTH_AND_HEIGHT";
     });
     centerButton.appendChild(buttonText);
+
+    centerButton.setRelaunchData({ command: 'watch', open: '' })
 
     // var thumbnail = figma.createFrame();
     // thumbnail.resize(480, (data.height / data.width) * 480);
