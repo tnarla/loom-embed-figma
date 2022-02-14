@@ -6,10 +6,6 @@ function App() {
   const [page, setPage] = useState("embed");
   const [embeds, setEmbeds] = useState<any[]>([]);
 
-  function cancel() {
-    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
-  }
-
   useEffect(() => {
     if (page === "view") {
       parent.postMessage({ pluginMessage: { type: "view" } }, "*");

@@ -23,7 +23,7 @@ if (data) {
   });
 }
 
-figma.ui.onmessage = (msg) => {
+figma.ui.onmessage = async (msg) => {
   if (msg.type === "view") {
     const embeds = figma.currentPage.findChildren(
       (n) => n.name === "Loom Embed"
@@ -42,8 +42,6 @@ figma.ui.onmessage = (msg) => {
   }
 
   if (msg.type === "move") {
-    console.log(msg.location);
-
     figma.viewport.center = {
       x: msg.location.x + 272,
       y: msg.location.y + 204,
@@ -880,6 +878,15 @@ figma.ui.onmessage = (msg) => {
       [1, 0, 64],
       [0, 1, 19],
     ];
+    buttonText.fills = [
+      {
+        type: "SOLID",
+        visible: true,
+        opacity: 1,
+        blendMode: "NORMAL",
+        color: { r: 1, g: 1, b: 1 },
+      },
+    ];
     buttonText.x = 64;
     buttonText.y = 19;
     buttonText.hyperlink = {
@@ -906,95 +913,707 @@ figma.ui.onmessage = (msg) => {
     });
     centerButton.appendChild(buttonText);
 
-    centerButton.setRelaunchData({ command: 'watch', open: '' })
+    centerButton.setRelaunchData({ command: "watch", open: "" });
 
-    // var thumbnail = figma.createFrame();
-    // thumbnail.resize(480, (data.height / data.width) * 480);
+    var frame_1848_3263 = figma.createFrame();
+    frame_1848_3263.resize(246.0, 30.0);
+    frame_1848_3263.primaryAxisSizingMode = "AUTO";
+    frame_1848_3263.counterAxisSizingMode = "AUTO";
+    frame_1848_3263.name = "Title";
+    frame_1848_3263.relativeTransform = [
+      [1, 0, 11],
+      [0, 1, 10],
+    ];
+    frame_1848_3263.x = 11;
+    frame_1848_3263.y = 10;
+    frame_1848_3263.fills = [
+      {
+        type: "SOLID",
+        visible: true,
+        opacity: 0.800000011920929,
+        blendMode: "NORMAL",
+        color: { r: 0, g: 0, b: 0 },
+      },
+    ];
+    frame_1848_3263.cornerRadius = 6;
+    frame_1848_3263.paddingLeft = 8;
+    frame_1848_3263.paddingRight = 8;
+    frame_1848_3263.paddingTop = 4;
+    frame_1848_3263.paddingBottom = 4;
+    frame_1848_3263.primaryAxisAlignItems = "CENTER";
+    frame_1848_3263.counterAxisAlignItems = "CENTER";
+    frame_1848_3263.backgrounds = [
+      {
+        type: "SOLID",
+        visible: true,
+        opacity: 0.800000011920929,
+        blendMode: "NORMAL",
+        color: { r: 0, g: 0, b: 0 },
+      },
+    ];
+    frame_1848_3263.clipsContent = false;
+    frame_1848_3263.expanded = false;
+    frame_1848_3263.layoutMode = "HORIZONTAL";
+    frame_1848_3263.counterAxisSizingMode = "AUTO";
+    frame_1848_3263.itemSpacing = 8;
+    parentFrame.appendChild(frame_1848_3263);
 
-    // thumbnail.layoutAlign = "STRETCH";
-    // thumbnail.layoutGrow = 1;
-    // thumbnail.fills = [
-    //   {
-    //     type: "IMAGE",
-    //     scaleMode: "FILL",
-    //     imageHash: imageHash,
-    //   },
-    // ];
-    // thumbnail.cornerRadius = 4;
-    // thumbnail.primaryAxisSizingMode = "AUTO";
-    // thumbnail.backgrounds = [
-    //   {
-    //     type: "IMAGE",
-    //     scaleMode: "FILL",
-    //     imageHash: imageHash,
-    //   },
-    // ];
-    // thumbnail.layoutMode = "VERTICAL";
-    // parentFrame.appendChild(thumbnail);
-
-    // // Create TEXT
-    // var title = figma.createText();
-    // title.resize(480, 25);
-    // title.name = data.title;
-    // title.relativeTransform = [
-    //   [1, 0, 32],
-    //   [0, 1, 376],
-    // ];
-    // title.x = 32;
-    // title.y = 376;
-    // title.layoutAlign = "STRETCH";
-    // loadFonts().then((res) => {
-    //   title.fontName = {
-    //     family: "Arial",
-    //     style: "Bold",
-    //   };
-    //   title.characters = data.title;
-    //   title.fontSize = 22;
-    //   title.fontName = { family: "Arial", style: "Bold" };
-    //   title.textAutoResize = "HEIGHT";
-    // });
-    // parentFrame.appendChild(title);
-
-    // // Create FRAME
-    // var linkFrame = figma.createFrame();
-    // linkFrame.resize(480, 17);
-    // linkFrame.relativeTransform = [
-    //   [1, 0, 32],
-    //   [0, 1, 417],
-    // ];
-    // linkFrame.x = 32;
-    // linkFrame.y = 417;
-    // linkFrame.layoutAlign = "MIN";
-    // linkFrame.primaryAxisAlignItems = "MIN";
-    // linkFrame.primaryAxisSizingMode = "FIXED";
-    // linkFrame.layoutMode = "HORIZONTAL";
-    // parentFrame.appendChild(linkFrame);
-
-    // // Create TEXT
-    // var watchOnLoom = figma.createText();
-    // watchOnLoom.resize(131.0, 16.0);
-    // watchOnLoom.name = "View video on Loom";
-    // watchOnLoom.fills = [
-    //   {
-    //     type: "SOLID",
-    //     visible: true,
-    //     opacity: 1,
-    //     blendMode: "NORMAL",
-    //     color: { r: 0, g: 0.6700000166893005, b: 0.9700000286102295 },
-    //   },
-    // ];
-    // watchOnLoom.hyperlink = { type: "URL", value: data.embedUrl };
-    // loadFonts().then((res) => {
-    //   watchOnLoom.fontName = {
-    //     family: "Arial",
-    //     style: "Regular",
-    //   };
-    //   watchOnLoom.characters = "View video on Loom";
-    //   watchOnLoom.fontSize = 14;
-    //   watchOnLoom.textDecoration = "UNDERLINE";
-    //   watchOnLoom.fontName = { family: "Arial", style: "Regular" };
-    //   watchOnLoom.textAutoResize = "WIDTH_AND_HEIGHT";
-    // });
-    // linkFrame.appendChild(watchOnLoom);
+    var vector_1848_3264 = figma.createVector();
+    vector_1848_3264.resize(16.0, 16.0);
+    vector_1848_3264.name = "Loom";
+    vector_1848_3264.opacity = 0.6000000238418579;
+    vector_1848_3264.fills = [
+      {
+        type: "SOLID",
+        visible: true,
+        opacity: 1,
+        blendMode: "NORMAL",
+        color: { r: 1, g: 1, b: 1 },
+      },
+    ];
+    vector_1848_3264.strokes = [];
+    vector_1848_3264.strokeAlign = "INSIDE";
+    vector_1848_3264.relativeTransform = [
+      [1, 0, 8],
+      [0, 1, 7],
+    ];
+    vector_1848_3264.x = 8;
+    vector_1848_3264.y = 7;
+    vector_1848_3264.constraints = { horizontal: "SCALE", vertical: "SCALE" };
+    vector_1848_3264.vectorNetwork = {
+      regions: [
+        {
+          windingRule: "NONZERO",
+          loops: [
+            [
+              0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+              19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+              35, 36,
+            ],
+            [37, 38, 39, 40],
+          ],
+        },
+      ],
+      segments: [
+        {
+          start: 0,
+          end: 1,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 1,
+          end: 2,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 2,
+          end: 3,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 3,
+          end: 4,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 4,
+          end: 5,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 5,
+          end: 6,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 6,
+          end: 7,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 7,
+          end: 8,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 8,
+          end: 9,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 9,
+          end: 10,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 10,
+          end: 11,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 11,
+          end: 12,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 12,
+          end: 13,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 13,
+          end: 14,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 14,
+          end: 15,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 15,
+          end: 16,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 16,
+          end: 17,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 17,
+          end: 18,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 18,
+          end: 19,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 19,
+          end: 20,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 20,
+          end: 21,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 21,
+          end: 22,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 22,
+          end: 23,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 23,
+          end: 24,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 24,
+          end: 25,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 25,
+          end: 26,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 26,
+          end: 27,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 27,
+          end: 28,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 28,
+          end: 29,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 29,
+          end: 30,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 30,
+          end: 31,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 31,
+          end: 32,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 32,
+          end: 33,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 33,
+          end: 34,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 34,
+          end: 35,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 35,
+          end: 36,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 36,
+          end: 0,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 37,
+          end: 38,
+          tangentStart: { x: -1.3419874367710518, y: 0 },
+          tangentEnd: { x: 0, y: 1.3420250188989902 },
+        },
+        {
+          start: 38,
+          end: 39,
+          tangentStart: { x: 0, y: -1.3420250188989902 },
+          tangentEnd: { x: -1.3419874367710518, y: 0 },
+        },
+        {
+          start: 39,
+          end: 40,
+          tangentStart: { x: 1.3419874367710518, y: 0 },
+          tangentEnd: { x: 0, y: -1.3420250188989902 },
+        },
+        {
+          start: 40,
+          end: 37,
+          tangentStart: { x: 0, y: 1.3420250188989902 },
+          tangentEnd: { x: 1.3419874367710518, y: 0 },
+        },
+      ],
+      vertices: [
+        {
+          x: 16,
+          y: 7.11031528826275,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 11.321396438739361,
+          y: 7.11031528826275,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 15.373321400878405,
+          y: 4.770948337409687,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 14.483437571557591,
+          y: 3.2292757012178517,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 10.431512609418546,
+          y: 5.568642993593213,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 12.770367349879967,
+          y: 1.5170522937235202,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 11.228737886756768,
+          y: 0.6266961491482519,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 8.889883829320816,
+          y: 4.678286849017944,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 8.889883829320816,
+          y: 0,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 7.110116170679185,
+          y: 0,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 7.110116170679185,
+          y: 4.6787342432284245,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 4.7703670083672325,
+          y: 0.6266961491482519,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 3.2291852684384006,
+          y: 1.5166047287518913,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 5.568487049068721,
+          y: 5.568195257860435,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 1.516562257686043,
+          y: 3.2292757012178517,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 0.6266785991215951,
+          y: 4.7705006016769085,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 4.678603219747906,
+          y: 7.10986789405227,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 0,
+          y: 7.10986789405227,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 0,
+          y: 8.889684711737251,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 4.678155838066273,
+          y: 8.889684711737251,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 0.6266785991215951,
+          y: 11.22905234563491,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 1.516562257686043,
+          y: 12.770724981826746,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 5.568039325874354,
+          y: 10.431804742139565,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 3.228737545244034,
+          y: 14.48339510048696,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 4.7703670083672325,
+          y: 15.373303850851748,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 7.109668788997553,
+          y: 11.321266098293874,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 7.109668788997553,
+          y: 16,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 8.889435764613713,
+          y: 16,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 8.889435764613713,
+          y: 11.321713492504355,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 11.228289822049668,
+          y: 15.373303850851748,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 12.769919285172866,
+          y: 14.48339510048696,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 10.43061784605528,
+          y: 10.431357347929087,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 14.482542808194324,
+          y: 12.770724981826746,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 15.37242663751514,
+          y: 11.22905234563491,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 11.320949057057728,
+          y: 8.890132788992327,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 15.999105236636735,
+          y: 8.890132788992327,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 15.999105236636735,
+          y: 7.11031528826275,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 8,
+          y: 10.420613739476204,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 5.570277600333453,
+          y: 7.990823295850692,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 8,
+          y: 5.561033193747479,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+        {
+          x: 10.429722399666547,
+          y: 7.990823295850692,
+          strokeCap: "NONE",
+          strokeJoin: "MITER",
+          cornerRadius: 0,
+          handleMirroring: "NONE",
+        },
+      ],
+    };
+    vector_1848_3264.vectorPaths = [
+      {
+        windingRule: "NONZERO",
+        data: "M 16 7.11031528826275 L 11.321396438739361 7.11031528826275 L 15.373321400878405 4.770948337409687 L 14.483437571557591 3.2292757012178517 L 10.431512609418546 5.568642993593213 L 12.770367349879967 1.5170522937235202 L 11.228737886756768 0.6266961491482519 L 8.889883829320816 4.678286849017944 L 8.889883829320816 0 L 7.110116170679185 0 L 7.110116170679185 4.6787342432284245 L 4.7703670083672325 0.6266961491482519 L 3.2291852684384006 1.5166047287518913 L 5.568487049068721 5.568195257860435 L 1.516562257686043 3.2292757012178517 L 0.6266785991215951 4.7705006016769085 L 4.678603219747906 7.10986789405227 L 0 7.10986789405227 L 0 8.889684711737251 L 4.678155838066273 8.889684711737251 L 0.6266785991215951 11.22905234563491 L 1.516562257686043 12.770724981826746 L 5.568039325874354 10.431804742139565 L 3.228737545244034 14.48339510048696 L 4.7703670083672325 15.373303850851748 L 7.109668788997553 11.321266098293874 L 7.109668788997553 16 L 8.889435764613713 16 L 8.889435764613713 11.321713492504355 L 11.228289822049668 15.373303850851748 L 12.769919285172866 14.48339510048696 L 10.43061784605528 10.431357347929087 L 14.482542808194324 12.770724981826746 L 15.37242663751514 11.22905234563491 L 11.320949057057728 8.890132788992327 L 15.999105236636735 8.890132788992327 L 15.999105236636735 7.11031528826275 L 16 7.11031528826275 Z M 8 10.420613739476204 C 6.658012563228948 10.420613739476204 5.570277600333453 9.332848314749683 5.570277600333453 7.990823295850692 C 5.570277600333453 6.648798276951702 6.658012563228948 5.561033193747479 8 5.561033193747479 C 9.341987436771053 5.561033193747479 10.429722399666547 6.648798276951702 10.429722399666547 7.990823295850692 C 10.429722399666547 9.332848314749683 9.341987436771053 10.420613739476204 8 10.420613739476204 Z",
+      },
+    ];
+    frame_1848_3263.appendChild(vector_1848_3264);
   }
+
+  var text_1848_3265 = figma.createText();
+  text_1848_3265.resize(206.0, 22.0);
+  text_1848_3265.name = "Figma - Untitled";
+  text_1848_3265.fills = [
+    {
+      type: "SOLID",
+      visible: true,
+      opacity: 1,
+      blendMode: "NORMAL",
+      color: { r: 1, g: 1, b: 1 },
+    },
+  ];
+  text_1848_3265.relativeTransform = [
+    [1, 0, 32],
+    [0, 1, 4],
+  ];
+  text_1848_3265.x = 32;
+  text_1848_3265.y = 4;
+
+  const font = await figma.loadFontAsync({ family: "Inter", style: "Bold" });
+
+  loadFonts().then((res) => {
+    text_1848_3265.fontName = {
+      family: "Inter",
+      style: "Bold",
+    };
+
+    text_1848_3265.characters = "Figma - Untitled";
+    text_1848_3265.fontSize = 14;
+    text_1848_3265.lineHeight = { unit: "PERCENT", value: 160.0000023841858 };
+    text_1848_3265.fontName = { family: "Inter", style: "Bold" };
+    text_1848_3265.textAutoResize = "WIDTH_AND_HEIGHT";
+  });
+  frame_1848_3263.appendChild(text_1848_3265);
 };
