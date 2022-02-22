@@ -23,6 +23,24 @@ if (data) {
   });
 }
 
+function isLoomEmbedNode(node: SceneNode) {
+  return node.name.includes("Loom Video");
+}
+
+figma.root.setRelaunchData({ open: "" });
+
+figma.on("selectionchange", () => {
+  if (figma.currentPage.selection.length > 0) {
+    for (const node of figma.currentPage.selection) {
+      if (node.setRelaunchData && isLoomEmbedNode(node)) {
+        node.setRelaunchData({
+          relaunch: "",
+        });
+      }
+    }
+  }
+});
+
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "view") {
     const embeds = figma.currentPage.findChildren(
@@ -33,7 +51,6 @@ figma.ui.onmessage = async (msg) => {
 
     for (let i = 0; i < embeds.length; i++) {
       const img = embeds[i].children[0].fills;
-      console.log("link", embeds[i].children[2].children.hyperlink);
       const title = embeds[i].children[1].characters;
       const location = { x: embeds[i].x, y: embeds[i].y };
       embedsToSend.push({ img, title, location });
@@ -912,8 +929,6 @@ figma.ui.onmessage = async (msg) => {
       buttonText.textAutoResize = "WIDTH_AND_HEIGHT";
     });
     centerButton.appendChild(buttonText);
-
-    centerButton.setRelaunchData({ command: "watch", open: "" });
 
     var frame_1848_3263 = figma.createFrame();
     frame_1848_3263.resize(246.0, 30.0);

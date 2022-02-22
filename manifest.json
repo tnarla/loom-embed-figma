@@ -4,6 +4,9 @@
   "api": "1.0.0",
   "main": "dist/code.js",
   "editorType": ["figma"],
-  "relaunchButtons": [{ "command": "watch", "name": "Watch Loom" }],
+  "relaunchButtons": [
+    { "command": "open", "name": "Open Loom", "multipleSelection": true },
+    { "command": "relaunch", "name": "Open Loom", "multipleSelection": true }
+  ],
   "ui": "dist/index.html"
 }
