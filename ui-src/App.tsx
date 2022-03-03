@@ -7,6 +7,7 @@ function App() {
   const [url, setUrl] = useState<string | undefined>();
   const [page, setPage] = useState("embed");
   const [selectedUrl, setSelectedUrl] = useState<string>();
+  const [existingUrls, setExistingUrls] = useState<string[]>();
 
   useEffect(() => {
     if (page === "view") {
@@ -43,15 +44,19 @@ function App() {
     const msg = event.data.pluginMessage.type;
     switch (msg) {
       case "view": {
-        setSelectedUrl(event.data.pluginMessage.url);
+        setSelectedUrl(event.data.pluginMessage.url);  
         setPage("view");
       }
+      case "embed": {
+        setPage("embed");
+        setExistingUrls(event.data.pluginMessage.urls);
+      }
       default:
-        console.log("hi");
+        break;
     }
   });
 
-  return page === "embed"?  <EmbedLoom setUrl={setUrl} create={create} /> : <ViewLoom url={selectedUrl} />;
+  return page === "embed"?  <EmbedLoom setUrl={setUrl} create={create} urls={existingUrls} /> : <ViewLoom url={selectedUrl} />;
 }
 
 export default App;

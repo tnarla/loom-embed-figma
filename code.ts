@@ -1,4 +1,19 @@
-figma.showUI(__html__, { width: 381, height: 81 });
+function isLoomEmbedNode(node: SceneNode) {
+  return node.name.includes("Loom Video");
+}
+
+const loomNodes = figma.currentPage.findAll((node) => isLoomEmbedNode(node));
+
+if (loomNodes.length > 0 && figma.currentPage.selection.length === 0) {
+  const loomUrls = loomNodes.map(
+    (node) => node.children[2].children[1].hyperlink.value
+  );
+  figma.showUI(__html__, { width: 381, height: Math.min(800,loomUrls.length * 96 + 125) });
+  figma.ui.postMessage({ type: "embed", urls: loomUrls });
+} else {
+  //get relaunch data
+  figma.showUI(__html__, { width: 381, height: 81 });
+}
 
 // Load FONTS
 async function loadFonts() {
@@ -23,19 +38,19 @@ if (data) {
   });
 }
 
-function isLoomEmbedNode(node: SceneNode) {
-  return node.name.includes("Loom Video");
-}
-
 figma.root.setRelaunchData({ open: "" });
 
 figma.on("selectionchange", () => {
   if (figma.currentPage.selection.length > 0) {
     for (const node of figma.currentPage.selection) {
       if (node.setRelaunchData && isLoomEmbedNode(node)) {
-        figma.ui.postMessage({ type: "view", url: node.children[2].children[1].hyperlink.value });
         node.setRelaunchData({
           relaunch: "",
+          url: node.children[2].children[1].hyperlink.value,
+        });
+        figma.ui.postMessage({
+          type: "view",
+          url: node.children[2].children[1].hyperlink.value,
         });
       }
     }

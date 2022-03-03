@@ -13,7 +13,6 @@ export default function ViewLoom({ url }: Props) {
       try {
         if (!url) return;
         const data = await loomEmbedSDK.oembed(url);
-        console.log({ data });
         setData(data);
       } catch (err) {
         console.error(err);
