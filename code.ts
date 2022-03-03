@@ -33,6 +33,7 @@ figma.on("selectionchange", () => {
   if (figma.currentPage.selection.length > 0) {
     for (const node of figma.currentPage.selection) {
       if (node.setRelaunchData && isLoomEmbedNode(node)) {
+        figma.ui.postMessage({ type: "view", url: node.children[2].children[1].hyperlink.value });
         node.setRelaunchData({
           relaunch: "",
         });
@@ -43,7 +44,6 @@ figma.on("selectionchange", () => {
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "view") {
-    console.log("plugin hit view")
     const embeds = figma.currentPage.findChildren(
       (n) => n.name === "Loom Embed"
     );
@@ -57,6 +57,7 @@ figma.ui.onmessage = async (msg) => {
       embedsToSend.push({ img, title, location });
     }
     figma.ui.postMessage({ type: "view", embeds: embedsToSend });
+    figma.ui.resize(800, 600);
   }
 
   if (msg.type === "move") {
@@ -909,7 +910,7 @@ figma.ui.onmessage = async (msg) => {
     buttonText.y = 19;
     buttonText.hyperlink = {
       type: "URL",
-      value: "https://www.loom.com/share/ba06c5819a6e46fb8de78ebc7c89a50b",
+      value: data.embedUrl,
     };
     loadFonts().then((res) => {
       buttonText.fontName = {

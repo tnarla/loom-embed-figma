@@ -1,11 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import * as loomEmbedSDK from "@loomhq/loom-embed";
 
 interface Props {
-  url: string
+  url?: string;
 }
 
-export default function ViewLoom({}) {
+export default function ViewLoom({ url }: Props) {
+  const [data, setData] = useState<any>();
 
-  return( <div>stuff</div>)
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!url) return;
+        const data = await loomEmbedSDK.oembed(url);
+        console.log({ data });
+        setData(data);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
 
+    return () => {
+      setData(undefined);
+    };
+  }, []);
+
+  return (
+    <div className="">
+      {data?.html && (
+        <div dangerouslySetInnerHTML={{ __html: data?.html }}></div>
+      )}
+    </div>
+  );
 }

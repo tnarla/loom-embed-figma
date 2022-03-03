@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import * as loomEmbedSDK from "@loomhq/loom-embed";
 import EmbedLoom from "./components/EmbedLoom";
+import ViewLoom from "./components/ViewLoom";
 
 function App() {
   const [url, setUrl] = useState<string | undefined>();
   const [page, setPage] = useState("embed");
-  const [embeds, setEmbeds] = useState<any[]>([]);
+  const [selectedUrl, setSelectedUrl] = useState<string>();
 
   useEffect(() => {
     if (page === "view") {
@@ -39,28 +40,18 @@ function App() {
   }
 
   window.addEventListener("message", async (event) => {
-    // const numOfNodesSelected =
-    //   event.data?.pluginMessage?.selection?.length ?? 0;
-
-    // // If we don't have any nodes selected, we return early.
-    // if (numOfNodesSelected !== 1) return;
-
-    // const dataUrl = event.data?.pluginMessage?.dataUrl;
-    // console.log({ dataUrl });
-
-    // const data = await loomEmbedSDK.oembed(dataUrl);
     const msg = event.data.pluginMessage.type;
     switch (msg) {
       case "view": {
-        console.log("embeds", event.data.pluginMessage.embeds);
-        setEmbeds(event.data.pluginMessage.embeds);
+        setSelectedUrl(event.data.pluginMessage.url);
+        setPage("view");
       }
       default:
         console.log("hi");
     }
   });
 
-  return <EmbedLoom setUrl={setUrl} create={create} />;
+  return page === "embed"?  <EmbedLoom setUrl={setUrl} create={create} /> : <ViewLoom url={selectedUrl} />;
 }
 
 export default App;
