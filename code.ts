@@ -43,6 +43,7 @@ figma.on("selectionchange", () => {
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "view") {
+    console.log("plugin hit view")
     const embeds = figma.currentPage.findChildren(
       (n) => n.name === "Loom Embed"
     );
@@ -1595,40 +1596,39 @@ figma.ui.onmessage = async (msg) => {
       },
     ];
     frame_1848_3263.appendChild(vector_1848_3264);
+    var text_1848_3265 = figma.createText();
+    text_1848_3265.resize(206.0, 22.0);
+    text_1848_3265.name = data.title;
+    text_1848_3265.fills = [
+      {
+        type: "SOLID",
+        visible: true,
+        opacity: 1,
+        blendMode: "NORMAL",
+        color: { r: 1, g: 1, b: 1 },
+      },
+    ];
+    text_1848_3265.relativeTransform = [
+      [1, 0, 32],
+      [0, 1, 4],
+    ];
+    text_1848_3265.x = 32;
+    text_1848_3265.y = 4;
+
+    const font = await figma.loadFontAsync({ family: "Inter", style: "Bold" });
+
+    loadFonts().then((res) => {
+      text_1848_3265.fontName = {
+        family: "Inter",
+        style: "Bold",
+      };
+
+      text_1848_3265.characters = data.title;
+      text_1848_3265.fontSize = 14;
+      text_1848_3265.lineHeight = { unit: "PERCENT", value: 160.0000023841858 };
+      text_1848_3265.fontName = { family: "Inter", style: "Bold" };
+      text_1848_3265.textAutoResize = "WIDTH_AND_HEIGHT";
+    });
+    frame_1848_3263.appendChild(text_1848_3265);
   }
-
-  var text_1848_3265 = figma.createText();
-  text_1848_3265.resize(206.0, 22.0);
-  text_1848_3265.name = "Figma - Untitled";
-  text_1848_3265.fills = [
-    {
-      type: "SOLID",
-      visible: true,
-      opacity: 1,
-      blendMode: "NORMAL",
-      color: { r: 1, g: 1, b: 1 },
-    },
-  ];
-  text_1848_3265.relativeTransform = [
-    [1, 0, 32],
-    [0, 1, 4],
-  ];
-  text_1848_3265.x = 32;
-  text_1848_3265.y = 4;
-
-  const font = await figma.loadFontAsync({ family: "Inter", style: "Bold" });
-
-  loadFonts().then((res) => {
-    text_1848_3265.fontName = {
-      family: "Inter",
-      style: "Bold",
-    };
-
-    text_1848_3265.characters = "Figma - Untitled";
-    text_1848_3265.fontSize = 14;
-    text_1848_3265.lineHeight = { unit: "PERCENT", value: 160.0000023841858 };
-    text_1848_3265.fontName = { family: "Inter", style: "Bold" };
-    text_1848_3265.textAutoResize = "WIDTH_AND_HEIGHT";
-  });
-  frame_1848_3263.appendChild(text_1848_3265);
 };
