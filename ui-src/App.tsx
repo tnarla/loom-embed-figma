@@ -96,8 +96,8 @@ function App() {
             </div>
             <input
               autoFocus
-              type="email"
-              name="email"
+              type="text"
+              name="url"
               id="url"
               className="focus:ring-[#615CF5] focus:border-[#615CF5] block w-full pl-10 sm:text-sm border-gray-300 rounded-md h-9"
               placeholder="Paste a link to a loom"
