@@ -1,13 +1,15 @@
 import React from "react";
+import * as loomEmbedSDK from "@loomhq/loom-embed";
 
 interface Props {
   setUrl(url: string): void;
   create(): void;
+  error?: string;
 }
 
-export default function EmbedLoom({ setUrl, create }: Props) {
+export default function EmbedLoom({ setUrl, create, error }: Props) {
   return (
-    <div className="w-full h-full flex flex-col items-center p-5">
+    <div className="w-full h-full flex flex-col items-center p-6 pt-5">
       <div className="flex items-center justify-between w-full mx-[20px]">
         <div className="flex-1 mr-2">
           <label
@@ -69,6 +71,7 @@ export default function EmbedLoom({ setUrl, create }: Props) {
           Add
         </button>
       </div>
+      {error && <div className="text-red-600 self-start text-xs pt-1">{error}</div>}
     </div>
   );
 }
