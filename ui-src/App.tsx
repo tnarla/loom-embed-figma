@@ -44,15 +44,11 @@ function App() {
     }
   });
 
-  function goBack() {
-    setPage("embed");
-    // TODO: set height/ width back to normal height
-  }
 
   return page === "embed" ? (
     <EmbedLoom setUrl={setUrl} create={create} />
   ) : (
-    <ViewLoom url={selectedUrl} goBack={goBack} />
+    <ViewLoom url={selectedUrl} />
   );
 }
 

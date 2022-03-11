@@ -33,25 +33,12 @@ async function loadFonts() {
   ]);
 }
 
-let data;
-
-if (data) {
-  figma.ui.postMessage({
-    dataUrl: data.embedUrl,
-    selection: figma.currentPage.selection,
-  });
-}
-
 figma.root.setRelaunchData({ open: "" });
 
 figma.on("selectionchange", () => {
   if (figma.currentPage.selection.length > 0) {
     for (const node of figma.currentPage.selection) {
-      if (node.setRelaunchData && isLoomEmbedNode(node)) {
-        node.setRelaunchData({
-          relaunch: "",
-          url: node.children[2].children[1].hyperlink.value,
-        });
+      if (isLoomEmbedNode(node)) {
         figma.ui.postMessage({
           type: "view",
           url: node.children[2].children[1].hyperlink.value,
@@ -62,6 +49,40 @@ figma.on("selectionchange", () => {
     }
   }
 });
+
+function thumbnail({ imageHash }: { imageHash: string }) {
+  var node = figma.createRectangle();
+  node.resize(571.0, 385.0);
+  node.name = "Thumbnail";
+  node.fills = [
+    {
+      type: "IMAGE",
+      visible: true,
+      opacity: 1,
+      blendMode: "NORMAL",
+      scaleMode: "FILL",
+      imageTransform: [
+        [1, 0, 0],
+        [0, 1, 0],
+      ],
+      scalingFactor: 0.5,
+      rotation: 0,
+      filters: {
+        exposure: 0,
+        contrast: 0,
+        saturation: 0,
+        temperature: 0,
+        tint: 0,
+        highlights: 0,
+        shadows: 0,
+      },
+      imageHash: imageHash,
+    },
+  ];
+  node.constrainProportions = true;
+  node.constraints = { horizontal: "SCALE", vertical: "SCALE" };
+  return node;
+}
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "create") {
@@ -108,8 +129,7 @@ figma.ui.onmessage = async (msg) => {
       ];
     }
 
-    data = msg.data;
-    console.log(data);
+    const data = msg.data;
     let imageHash = figma.createImage(new Uint8Array(data.thumbnailHash)).hash;
     var parentFrame = figma.createFrame();
     parentFrame.effectStyleId = shadow.id;
@@ -136,38 +156,7 @@ figma.ui.onmessage = async (msg) => {
     parentFrame.backgrounds = [];
     parentFrame.expanded = false;
     figma.currentPage.appendChild(parentFrame);
-
-    var thumbnail = figma.createRectangle();
-    thumbnail.resize(571.0, 385.0);
-    thumbnail.name = "Thumbnail";
-    thumbnail.fills = [
-      {
-        type: "IMAGE",
-        visible: true,
-        opacity: 1,
-        blendMode: "NORMAL",
-        scaleMode: "FILL",
-        imageTransform: [
-          [1, 0, 0],
-          [0, 1, 0],
-        ],
-        scalingFactor: 0.5,
-        rotation: 0,
-        filters: {
-          exposure: 0,
-          contrast: 0,
-          saturation: 0,
-          temperature: 0,
-          tint: 0,
-          highlights: 0,
-          shadows: 0,
-        },
-        imageHash: imageHash,
-      },
-    ];
-    thumbnail.constrainProportions = true;
-    thumbnail.constraints = { horizontal: "SCALE", vertical: "SCALE" };
-    parentFrame.appendChild(thumbnail);
+    parentFrame.appendChild(thumbnail({ imageHash }));
 
     var overlayRect = figma.createRectangle();
     overlayRect.fillStyleId = darkOverlay.id;
@@ -315,25 +304,44 @@ figma.ui.onmessage = async (msg) => {
               19, 20, 21, 22, 23,
             ],
           ],
+          fills: [
+            {
+              type: "SOLID",
+              visible: true,
+              opacity: 1,
+              blendMode: "NORMAL",
+              color: { r: 1, g: 1, b: 1 },
+            },
+          ],
+          fillStyleId: "",
         },
         {
           windingRule: "EVENODD",
-          loops: [[24, 25, 26, 27, 28, 29, 30, 31, 32]],
+          loops: [[24, 25, 26, 27, 28, 29, 34, 33, 36, 35, 31, 32, 30]],
+          fills: [
+            {
+              type: "SOLID",
+              visible: true,
+              opacity: 1,
+              blendMode: "NORMAL",
+              color: { r: 1, g: 1, b: 1 },
+            },
+          ],
+          fillStyleId: "",
         },
-        { windingRule: "EVENODD", loops: [[33, 34, 35, 36, 37, 38]] },
       ],
       segments: [
         {
           start: 0,
           end: 1,
-          tangentStart: { x: 0.19448217271387405, y: -0.19448201376814883 },
-          tangentEnd: { x: -0.27503968013763563, y: 0 },
+          tangentStart: { x: 0.19448217749595642, y: -0.1944820135831833 },
+          tangentEnd: { x: -0.2750396728515625, y: 0 },
         },
         {
           start: 2,
           end: 0,
-          tangentStart: { x: 0, y: -0.27503968013763336 },
-          tangentEnd: { x: -0.19448201376815044, y: 0.19448217271387244 },
+          tangentStart: { x: 0, y: -0.2750396728515625 },
+          tangentEnd: { x: -0.1944820135831833, y: 0.19448217749595642 },
         },
         {
           start: 3,
@@ -344,14 +352,14 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 4,
           end: 3,
-          tangentStart: { x: -0.19448217271387405, y: -0.19448217271387244 },
-          tangentEnd: { x: 0, y: 0.27503968013763336 },
+          tangentStart: { x: -0.19448217749595642, y: -0.19448217749595642 },
+          tangentEnd: { x: 0, y: 0.2750396728515625 },
         },
         {
           start: 5,
           end: 4,
-          tangentStart: { x: -0.27503872646329397, y: 0 },
-          tangentEnd: { x: 0.19448264955104488, y: 0.19448344427966133 },
+          tangentStart: { x: -0.2750387191772461, y: 0 },
+          tangentEnd: { x: 0.19448265433311462, y: 0.1944834440946579 },
         },
         {
           start: 6,
@@ -362,14 +370,14 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 7,
           end: 6,
-          tangentStart: { x: -0.19448217271387405, y: 0.19448344427966133 },
-          tangentEnd: { x: 0.27503840857184675, y: 0 },
+          tangentStart: { x: -0.19448217749595642, y: 0.1944834440946579 },
+          tangentEnd: { x: 0.2750384211540222, y: 0 },
         },
         {
           start: 8,
           end: 7,
-          tangentStart: { x: 0, y: 0.2750384085718445 },
-          tangentEnd: { x: 0.19448344427966294, y: -0.19448217271387244 },
+          tangentStart: { x: 0, y: 0.2750384211540222 },
+          tangentEnd: { x: 0.1944834440946579, y: -0.19448217749595642 },
         },
         {
           start: 9,
@@ -380,14 +388,14 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 10,
           end: 9,
-          tangentStart: { x: -0.7363790071376165, y: 0 },
-          tangentEnd: { x: 0, y: -0.7363796429205048 },
+          tangentStart: { x: -0.7363790273666382, y: 0 },
+          tangentEnd: { x: 0, y: -0.7363796234130859 },
         },
         {
           start: 11,
           end: 10,
-          tangentStart: { x: 0, y: -0.7363796429205048 },
-          tangentEnd: { x: 0.7363802787034054, y: 0 },
+          tangentStart: { x: 0, y: -0.7363796234130859 },
+          tangentEnd: { x: 0.7363802790641785, y: 0 },
         },
         {
           start: 12,
@@ -398,14 +406,14 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 13,
           end: 12,
-          tangentStart: { x: 0.6945775533935359, y: -0.694578824959319 },
-          tangentEnd: { x: 0, y: 0.9822845719201191 },
+          tangentStart: { x: 0.6945775747299194, y: -0.6945788264274597 },
+          tangentEnd: { x: 0, y: 0.9822845458984375 },
         },
         {
           start: 14,
           end: 13,
-          tangentStart: { x: 0.9822845719201273, y: 0 },
-          tangentEnd: { x: -0.6945788249593248, y: 0.6945775533935301 },
+          tangentStart: { x: 0.9822845458984375, y: 0 },
+          tangentEnd: { x: -0.6945788264274597, y: 0.6945775747299194 },
         },
         {
           start: 15,
@@ -416,14 +424,14 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 16,
           end: 15,
-          tangentStart: { x: 0.6945788249593248, y: 0.694578824959319 },
-          tangentEnd: { x: -0.9822839361372329, y: 0 },
+          tangentStart: { x: 0.6945788264274597, y: 0.6945788264274597 },
+          tangentEnd: { x: -0.9822839498519897, y: 0 },
         },
         {
           start: 17,
           end: 16,
-          tangentStart: { x: 0, y: 0.9822833003543302 },
-          tangentEnd: { x: -0.694579142850772, y: -0.6945800965251079 },
+          tangentStart: { x: 0, y: 0.9822832942008972 },
+          tangentEnd: { x: -0.6945791244506836, y: -0.694580078125 },
         },
         {
           start: 18,
@@ -434,14 +442,14 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 19,
           end: 18,
-          tangentStart: { x: -0.6945793017964956, y: 0.6945793812693516 },
-          tangentEnd: { x: 0, y: -0.9822831414086066 },
+          tangentStart: { x: -0.6945793032646179, y: 0.6945793628692627 },
+          tangentEnd: { x: 0, y: -0.9822831153869629 },
         },
         {
           start: 20,
           end: 19,
-          tangentStart: { x: -0.9822831414086147, y: 0 },
-          tangentEnd: { x: 0.6945793812693575, y: -0.6945793017964899 },
+          tangentStart: { x: -0.9822831153869629, y: 0 },
+          tangentEnd: { x: 0.6945793628692627, y: -0.6945793032646179 },
         },
         {
           start: 21,
@@ -452,14 +460,14 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 22,
           end: 21,
-          tangentStart: { x: 0, y: -0.7363797223933666 },
-          tangentEnd: { x: 0.736379642920511, y: 0 },
+          tangentStart: { x: 0, y: -0.7363797426223755 },
+          tangentEnd: { x: 0.7363796234130859, y: 0 },
         },
         {
           start: 23,
           end: 22,
-          tangentStart: { x: 0.736379642920511, y: 0 },
-          tangentEnd: { x: 0, y: 0.7363797223933666 },
+          tangentStart: { x: 0.7363796234130859, y: 0 },
+          tangentEnd: { x: 0, y: 0.7363797426223755 },
         },
         {
           start: 1,
@@ -470,8 +478,8 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 24,
           end: 25,
-          tangentStart: { x: -0.7363797223933728, y: 0 },
-          tangentEnd: { x: 0, y: -0.7363797223933666 },
+          tangentStart: { x: -0.7363797426223755, y: 0 },
+          tangentEnd: { x: 0, y: -0.7363797426223755 },
         },
         {
           start: 26,
@@ -482,8 +490,8 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 27,
           end: 26,
-          tangentStart: { x: 0, y: -0.7363797223933666 },
-          tangentEnd: { x: 0.736379642920511, y: 0 },
+          tangentStart: { x: 0, y: -0.7363797426223755 },
+          tangentEnd: { x: 0.7363796234130859, y: 0 },
         },
         {
           start: 28,
@@ -494,185 +502,173 @@ figma.ui.onmessage = async (msg) => {
         {
           start: 29,
           end: 28,
-          tangentStart: { x: 0.736379642920511, y: 0 },
-          tangentEnd: { x: 0, y: 0.7363796429205048 },
+          tangentStart: { x: 0.7363796234130859, y: 0 },
+          tangentEnd: { x: 0, y: 0.7363796234130859 },
         },
         {
           start: 30,
           end: 29,
-          tangentStart: { x: 0, y: 0.7363796429205048 },
-          tangentEnd: { x: -0.736379642920511, y: 0 },
+          tangentStart: { x: 0, y: 0.7363796234130859 },
+          tangentEnd: { x: -0.7363796234130859, y: 0 },
         },
         {
-          start: 31,
+          start: 25,
+          end: 32,
+          tangentStart: { x: 0, y: 0.7363797426223755 },
+          tangentEnd: { x: -0.7363797426223755, y: 0 },
+        },
+        {
+          start: 34,
+          end: 31,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0.3132133483886719, y: -0.4275627136230469 },
+        },
+        {
+          start: 32,
+          end: 34,
+          tangentStart: { x: 0, y: 0 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 33,
+          end: 35,
+          tangentStart: { x: 0.4275951385498047, y: -0.31318092346191406 },
+          tangentEnd: { x: 0, y: 0 },
+        },
+        {
+          start: 35,
           end: 30,
           tangentStart: { x: 0, y: 0 },
           tangentEnd: { x: 0, y: 0 },
         },
         {
-          start: 32,
-          end: 31,
-          tangentStart: { x: 0, y: 0 },
-          tangentEnd: { x: 0, y: 0 },
-        },
-        {
-          start: 25,
-          end: 32,
-          tangentStart: { x: 0, y: 0.7363797223933666 },
-          tangentEnd: { x: -0.7363797223933728, y: 0 },
-        },
-        {
-          start: 33,
-          end: 34,
-          tangentStart: { x: 0.5206985611571011, y: -0.5206990379942676 },
-          tangentEnd: { x: 0.5206985611571011, y: 0.5206990379942676 },
-        },
-        {
-          start: 35,
-          end: 33,
-          tangentStart: { x: 0, y: 0 },
-          tangentEnd: { x: 0, y: 0 },
+          start: 31,
+          end: 36,
+          tangentStart: { x: -0.3132133483886719, y: 0.4275627136230469 },
+          tangentEnd: { x: -0.7804384231567383, y: -0.655125617980957 },
         },
         {
           start: 36,
-          end: 35,
-          tangentStart: { x: 0.520699037994272, y: 0.5206985611570968 },
-          tangentEnd: { x: -0.520699037994272, y: 0.5206985611570968 },
-        },
-        {
-          start: 37,
-          end: 36,
-          tangentStart: { x: -0.5206991174671337, y: 0.5206985611570968 },
-          tangentEnd: { x: -0.5206991174671337, y: -0.5206985611570968 },
-        },
-        {
-          start: 38,
-          end: 37,
-          tangentStart: { x: 0, y: 0 },
-          tangentEnd: { x: 0, y: 0 },
-        },
-        {
-          start: 34,
-          end: 38,
-          tangentStart: { x: -0.5206985611571011, y: -0.5206991174671294 },
-          tangentEnd: { x: 0.5206985611571011, y: -0.5206991174671294 },
+          end: 33,
+          tangentStart: { x: 0.7804384231567383, y: 0.655125617980957 },
+          tangentEnd: { x: -0.4275951385498047, y: 0.31318092346191406 },
         },
       ],
       vertices: [
         {
-          x: 2.970407564650948,
-          y: 6.525937571153226,
+          x: 2.970407485961914,
+          y: 6.525937557220459,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 3.70370397842484,
-          y: 6.222196743811586,
+          x: 3.7037038803100586,
+          y: 6.222196578979492,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 2.666666737309306,
-          y: 7.259234302818558,
+          x: 2.6666667461395264,
+          y: 7.259234428405762,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 2.666666737309306,
-          y: 20.296272815500203,
+          x: 2.6666667461395264,
+          y: 20.29627227783203,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 2.970407564650948,
-          y: 21.029568275599747,
+          x: 2.970407485961914,
+          y: 21.02956771850586,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 3.70370397842484,
-          y: 21.33330973872428,
+          x: 3.7037038803100586,
+          y: 21.333309173583984,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 16.740742173215146,
-          y: 21.33330973872428,
+          x: 16.740741729736328,
+          y: 21.333309173583984,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 17.474037633314694,
-          y: 21.029568275599747,
+          x: 17.474037170410156,
+          y: 21.02956771850586,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 17.777779096439232,
-          y: 20.296272815500203,
+          x: 17.77777862548828,
+          y: 20.29627227783203,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 17.777779096439232,
-          y: 13.185160668298252,
+          x: 17.77777862548828,
+          y: 13.185160636901855,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 19.111112465093886,
-          y: 11.851827299643611,
+          x: 19.111112594604492,
+          y: 11.851827621459961,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 20.44444583374854,
-          y: 13.185160668298252,
+          x: 20.444446563720703,
+          y: 13.185160636901855,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 20.44444583374854,
-          y: 20.296272815500203,
+          x: 20.444446563720703,
+          y: 20.29627227783203,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 19.359656528888348,
-          y: 22.915187171173383,
+          x: 19.359657287597656,
+          y: 22.91518783569336,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 16.740742173215146,
+          x: 16.740741729736328,
           y: 23.999975204467773,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
@@ -680,7 +676,7 @@ figma.ui.onmessage = async (msg) => {
           handleMirroring: "NONE",
         },
         {
-          x: 3.70370397842484,
+          x: 3.7037038803100586,
           y: 23.999975204467773,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
@@ -688,8 +684,8 @@ figma.ui.onmessage = async (msg) => {
           handleMirroring: "NONE",
         },
         {
-          x: 1.0847896227516356,
-          y: 22.915187171173383,
+          x: 1.0847896337509155,
+          y: 22.91518783569336,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
@@ -697,7 +693,7 @@ figma.ui.onmessage = async (msg) => {
         },
         {
           x: 0,
-          y: 20.296272815500203,
+          y: 20.29627227783203,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
@@ -705,193 +701,175 @@ figma.ui.onmessage = async (msg) => {
         },
         {
           x: 0,
-          y: 7.259234302818558,
+          y: 7.259234428405762,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 1.0847896227516356,
-          y: 4.640319629253929,
+          x: 1.0847896337509155,
+          y: 4.64031982421875,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 3.70370397842484,
-          y: 3.5555300065023023,
+          x: 3.7037038803100586,
+          y: 3.555530071258545,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 10.814815807735402,
-          y: 3.5555300065023023,
+          x: 10.814815521240234,
+          y: 3.555530071258545,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 12.148149176390053,
-          y: 4.888863375156944,
+          x: 12.148149490356445,
+          y: 4.888863563537598,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 10.814815807735402,
-          y: 6.222196743811586,
+          x: 10.814815521240234,
+          y: 6.222196578979492,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 15.55545339466398,
-          y: 1.986821545145872e-8,
+          x: 15.555453300476074,
+          y: 3.973643103449831e-8,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 14.222120026009327,
-          y: 1.3333333686546418,
+          x: 14.22212028503418,
+          y: 1.3333333730697632,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 22.66656554186599,
-          y: 1.986821545145872e-8,
+          x: 22.66656494140625,
+          y: 3.973643103449831e-8,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 23.999898910520642,
-          y: 1.3333333686546418,
+          x: 23.99989891052246,
+          y: 1.3333333730697632,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 23.999898910520642,
-          y: 8.444444244290802,
+          x: 23.99989891052246,
+          y: 8.44444465637207,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 22.66656554186599,
-          y: 9.777777612945444,
+          x: 22.66656494140625,
+          y: 9.777777671813965,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 21.333230901645546,
-          y: 8.444444244290802,
+          x: 21.33323097229004,
+          y: 8.44444465637207,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 21.333230901645546,
-          y: 2.6666667373092836,
+          x: 8.686786651611328,
+          y: 13.427562713623047,
+          strokeCap: "ROUND",
+          strokeJoin: "ROUND",
+          cornerRadius: 0,
+          handleMirroring: "ANGLE_AND_LENGTH",
+        },
+        {
+          x: 15.555453300476074,
+          y: 2.6666667461395264,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 15.55545339466398,
-          y: 2.6666667373092836,
+          x: 10.572404861450195,
+          y: 15.313180923461914,
+          strokeCap: "ROUND",
+          strokeJoin: "ROUND",
+          cornerRadius: 0,
+          handleMirroring: "ANGLE_AND_LENGTH",
+        },
+        {
+          x: 19.291593551635742,
+          y: 2.6666667461395264,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 23.60944174685673,
-          y: 2.276142498550014,
+          x: 21.33323097229004,
+          y: 4.552353858947754,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
           handleMirroring: "NONE",
         },
         {
-          x: 23.60944174685673,
-          y: 0.3905243182321316,
+          x: 8.686786651611328,
+          y: 15.313180923461914,
           strokeCap: "ROUND",
           strokeJoin: "ROUND",
           cornerRadius: 0,
-          handleMirroring: "NONE",
-        },
-        {
-          x: 10.572404505740769,
-          y: 15.31318069334021,
-          strokeCap: "ROUND",
-          strokeJoin: "ROUND",
-          cornerRadius: 0,
-          handleMirroring: "NONE",
-        },
-        {
-          x: 8.686786881732903,
-          y: 15.31318069334021,
-          strokeCap: "ROUND",
-          strokeJoin: "ROUND",
-          cornerRadius: 0,
-          handleMirroring: "NONE",
-        },
-        {
-          x: 8.686786881732903,
-          y: 13.42756306933236,
-          strokeCap: "ROUND",
-          strokeJoin: "ROUND",
-          cornerRadius: 0,
-          handleMirroring: "NONE",
-        },
-        {
-          x: 21.723826665980443,
-          y: 0.3905243182321316,
-          strokeCap: "ROUND",
-          strokeJoin: "ROUND",
-          cornerRadius: 0,
-          handleMirroring: "NONE",
+          handleMirroring: "ANGLE_AND_LENGTH",
         },
       ],
     };
+
     buttonOutline.vectorPaths = [
       {
         windingRule: "EVENODD",
-        data: "M 3.70370397842484 6.222196743811586 C 3.428664298287204 6.222196743811586 3.164889737364822 6.331455557385077 2.970407564650948 6.525937571153226 C 2.7759255508827976 6.720419743867098 2.666666737309306 6.984194622680924 2.666666737309306 7.259234302818558 L 2.666666737309306 20.296272815500203 C 2.666666737309306 20.571312495637837 2.775925391937074 20.835086102885874 2.970407564650948 21.029568275599747 C 3.164890214201993 21.22405171987941 3.428665251961546 21.33330973872428 3.70370397842484 21.33330973872428 L 16.740742173215146 21.33330973872428 C 17.01578058178699 21.33330973872428 17.27955546060082 21.22405171987941 17.474037633314694 21.029568275599747 C 17.668521077594356 20.835086102885874 17.777779096439232 20.571311224072048 17.777779096439232 20.296272815500203 L 17.777779096439232 13.185160668298252 C 17.777779096439232 12.448781025377746 18.374733457956268 11.851827299643611 19.111112465093886 11.851827299643611 C 19.84749274379729 11.851827299643611 20.44444583374854 12.448781025377746 20.44444583374854 13.185160668298252 L 20.44444583374854 20.296272815500203 C 20.44444583374854 21.27855738742032 20.054234082281884 22.220608346214064 19.359656528888348 22.915187171173383 C 18.665077703929022 23.60976472456691 17.723026745135275 23.999975204467773 16.740742173215146 23.999975204467773 L 3.70370397842484 23.999975204467773 C 2.721420042287607 23.999975204467773 1.7793684477109604 23.6097659961327 1.0847896227516356 22.915187171173383 C 0.39021047990086355 22.220607074648274 0 21.27855611585453 0 20.296272815500203 L 0 7.259234302818558 C 0 6.276951161409952 0.39021032095513997 5.33489901052328 1.0847896227516356 4.640319629253929 C 1.779369004020993 3.9457403274574387 2.721420837016225 3.5555300065023023 3.70370397842484 3.5555300065023023 L 10.814815807735402 3.5555300065023023 C 11.551195450655912 3.5555300065023023 12.148149176390053 4.152483652763578 12.148149176390053 4.888863375156944 C 12.148149176390053 5.625243097550311 11.551195450655912 6.222196743811586 10.814815807735402 6.222196743811586 L 3.70370397842484 6.222196743811586 Z",
+        data: "M 3.7037038803100586 6.222196578979492 C 3.428664207458496 6.222196578979492 3.1648896634578705 6.331455543637276 2.970407485961914 6.525937557220459 C 2.7759254723787308 6.720419734716415 2.6666667461395264 6.984194755554199 2.6666667461395264 7.259234428405762 L 2.6666667461395264 20.29627227783203 C 2.6666667461395264 20.571311950683594 2.7759253084659576 20.835085541009903 2.970407485961914 21.02956771850586 C 3.1648901402950287 21.224051162600517 3.4286651611328125 21.333309173583984 3.7037038803100586 21.333309173583984 L 16.740741729736328 21.333309173583984 C 17.01578015089035 21.333309173583984 17.2795549929142 21.224051162600517 17.474037170410156 21.02956771850586 C 17.668520614504814 20.835085541009903 17.77777862548828 20.571310698986053 17.77777862548828 20.29627227783203 L 17.77777862548828 13.185160636901855 C 17.77777862548828 12.44878101348877 18.374733567237854 11.851827621459961 19.111112594604492 11.851827621459961 C 19.84749287366867 11.851827621459961 20.444446563720703 12.44878101348877 20.444446563720703 13.185160636901855 L 20.444446563720703 20.29627227783203 C 20.444446563720703 21.27855682373047 20.054234862327576 22.2206090092659 19.359657287597656 22.91518783569336 C 18.665078461170197 23.60976541042328 17.723026275634766 23.999975204467773 16.740741729736328 23.999975204467773 L 3.7037038803100586 23.999975204467773 C 2.721419930458069 23.999975204467773 1.7793684601783752 23.60976666212082 1.0847896337509155 22.91518783569336 C 0.39021050930023193 22.22060775756836 0 21.27855557203293 0 20.29627227783203 L 0 7.259234428405762 C 0 6.276951313018799 0.3902103304862976 5.334899187088013 1.0847896337509155 4.64031982421875 C 1.7793689966201782 3.945740520954132 2.7214207649230957 3.555530071258545 3.7037038803100586 3.555530071258545 L 10.814815521240234 3.555530071258545 C 11.55119514465332 3.555530071258545 12.148149490356445 4.152483820915222 12.148149490356445 4.888863563537598 C 12.148149490356445 5.625243306159973 11.55119514465332 6.222196578979492 10.814815521240234 6.222196578979492 L 3.7037038803100586 6.222196578979492 Z",
       },
       {
         windingRule: "EVENODD",
-        data: "M 14.222120026009327 1.3333333686546418 C 14.222120026009327 0.5969536462612752 14.819073672270607 1.986821545145872e-8 15.55545339466398 1.986821545145872e-8 L 22.66656554186599 1.986821545145872e-8 C 23.4029451847865 1.986821545145872e-8 23.999898910520642 0.5969536462612752 23.999898910520642 1.3333333686546418 L 23.999898910520642 8.444444244290802 C 23.999898910520642 9.180823887211307 23.4029451847865 9.777777612945444 22.66656554186599 9.777777612945444 C 21.930185898945478 9.777777612945444 21.333230901645546 9.180823887211307 21.333230901645546 8.444444244290802 L 21.333230901645546 2.6666667373092836 L 15.55545339466398 2.6666667373092836 C 14.819073672270607 2.6666667373092836 14.222120026009327 2.0697130910480084 14.222120026009327 1.3333333686546418 Z",
-      },
-      {
-        windingRule: "EVENODD",
-        data: "M 23.60944174685673 0.3905243182321316 C 24.130140308013832 0.9112233562263992 24.130140308013832 1.755443460555746 23.60944174685673 2.276142498550014 L 10.572404505740769 15.31318069334021 C 10.051705467746498 15.833879254497306 9.207485919727175 15.833879254497306 8.686786881732903 15.31318069334021 C 8.16608776426577 14.792482132183112 8.16608776426577 13.948261630489457 8.686786881732903 13.42756306933236 L 21.723826665980443 0.3905243182321316 C 22.244525227137544 -0.1301747992349978 23.08874318569963 -0.1301747992349978 23.60944174685673 0.3905243182321316 Z",
+        data: "M 14.22212028503418 1.3333333730697632 C 14.22212028503418 0.5969536304473877 14.819073557853699 3.973643103449831e-8 15.555453300476074 3.973643103449831e-8 L 22.66656494140625 3.973643103449831e-8 C 23.402944564819336 3.973643103449831e-8 23.99989891052246 0.5969536304473877 23.99989891052246 1.3333333730697632 L 23.99989891052246 8.44444465637207 C 23.99989891052246 9.180824279785156 23.402944564819336 9.777777671813965 22.66656494140625 9.777777671813965 C 21.930185317993164 9.777777671813965 21.33323097229004 9.180824279785156 21.33323097229004 8.44444465637207 L 21.33323097229004 4.552353858947754 C 21.33323097229004 4.552353858947754 11 15 10.572404861450195 15.313180923461914 C 10.14480972290039 15.626361846923828 9.467225074768066 15.968306541442871 8.686786651611328 15.313180923461914 C 7.90634822845459 14.658055305480957 8.373573303222656 13.855125427246094 8.686786651611328 13.427562713623047 C 9 13 19.291593551635742 2.6666667461395264 19.291593551635742 2.6666667461395264 L 15.555453300476074 2.6666667461395264 C 14.819073557853699 2.6666667461395264 14.22212028503418 2.0697131156921387 14.22212028503418 1.3333333730697632 Z",
       },
     ];
+
     openIcon.appendChild(buttonOutline);
 
     var buttonText = figma.createText();
     buttonText.resize(149.0, 26.0);
-    buttonText.name = "Watch video 2:31";
+    buttonText.name = "Watch video";
     buttonText.relativeTransform = [
       [1, 0, 64],
       [0, 1, 19],
@@ -911,24 +889,24 @@ figma.ui.onmessage = async (msg) => {
       type: "URL",
       value: data.embedUrl,
     };
-    loadFonts().then((res) => {
-      buttonText.fontName = {
-        family: "Arial",
-        style: "Bold",
-      };
-      buttonText.characters = "Watch video  2:31";
-      buttonText.fontSize = 18;
-      buttonText.letterSpacing = {
-        unit: "PIXELS",
-        value: -0.30000001192092896,
-      };
-      buttonText.lineHeight = { unit: "PERCENT", value: 145.00000476837158 };
-      buttonText.fontName = {
-        family: "Arial",
-        style: "Bold",
-      };
-      buttonText.textAutoResize = "WIDTH_AND_HEIGHT";
-    });
+    await loadFonts();
+    buttonText.fontName = {
+      family: "Arial",
+      style: "Bold",
+    };
+    buttonText.characters = "Watch video";
+    buttonText.fontSize = 18;
+    buttonText.letterSpacing = {
+      unit: "PIXELS",
+      value: -0.30000001192092896,
+    };
+    buttonText.lineHeight = { unit: "PERCENT", value: 145.00000476837158 };
+    buttonText.fontName = {
+      family: "Arial",
+      style: "Bold",
+    };
+    buttonText.textAutoResize = "WIDTH_AND_HEIGHT";
+
     centerButton.appendChild(buttonText);
 
     var frame_1848_3263 = figma.createFrame();
@@ -1615,19 +1593,23 @@ figma.ui.onmessage = async (msg) => {
     text_1848_3265.x = 32;
     text_1848_3265.y = 4;
 
-    loadFonts().then((res) => {
-      text_1848_3265.fontName = {
-        family: "Inter",
-        style: "Bold",
-      };
+    text_1848_3265.fontName = {
+      family: "Inter",
+      style: "Bold",
+    };
 
-      text_1848_3265.characters = data.title;
-      text_1848_3265.fontSize = 14;
-      text_1848_3265.lineHeight = { unit: "PERCENT", value: 160.0 };
-      text_1848_3265.fontName = { family: "Inter", style: "Bold" };
-      text_1848_3265.textAutoResize = "WIDTH_AND_HEIGHT";
-      figma.closePlugin();
-    });
+    text_1848_3265.characters = data.title;
+    text_1848_3265.fontSize = 14;
+    text_1848_3265.lineHeight = { unit: "PERCENT", value: 160.0 };
+    text_1848_3265.fontName = { family: "Inter", style: "Bold" };
+    text_1848_3265.textAutoResize = "WIDTH_AND_HEIGHT";
     frame_1848_3263.appendChild(text_1848_3265);
+
+    parentFrame.setRelaunchData({
+      relaunch: "",
+      url: data.embedUrl,
+    });
+
+    figma.closePlugin();
   }
 };
