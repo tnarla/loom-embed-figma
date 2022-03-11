@@ -1,32 +1,11 @@
-import React, { useEffect, useState } from "react";
-import * as loomEmbedSDK from "@loomhq/loom-embed";
+import React from "react";
 
 interface Props {
   setUrl(url: string): void;
   create(): void;
-  urls?: string[];
 }
 
-export default function EmbedLoom({ setUrl, create, urls }: Props) {
-  const [data, setData] = useState<any[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        if (!urls) return;
-        const urlData = await Promise.all(
-          urls.map((url) => loomEmbedSDK.oembed(url))
-        );
-        console.log({ urlData });
-        setData(urlData);
-      } catch (err) {
-        console.error(err);
-      }
-    })();
-  }, [urls]);
-
-  console.log(data);
-
+export default function EmbedLoom({ setUrl, create }: Props) {
   return (
     <div className="w-full h-full flex flex-col items-center p-5">
       <div className="flex items-center justify-between w-full mx-[20px]">
@@ -90,25 +69,6 @@ export default function EmbedLoom({ setUrl, create, urls }: Props) {
           Add
         </button>
       </div>
-
-      {data.length > 0 && (
-        <div className="self-start mt-6">
-          <div className="text-[#7A7A7A] font-medium">On this page</div>
-          <div className="flex flex-col space-y-4 mt-4">
-            {data.map((data) => (
-              <div className="flex space-x-2 items-center">
-                <img
-                  src={data.thumbnail_url}
-                  className="h-20 aspect-video object-contain"
-                />
-
-                <div className="font-semibold text-sm truncate">{data.title}</div>
-                <div>{data.description}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

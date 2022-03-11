@@ -2,16 +2,19 @@ function isLoomEmbedNode(node: SceneNode) {
   return node.name.includes("Loom Video");
 }
 
-const loomNodes = figma.currentPage.findAll((node) => isLoomEmbedNode(node));
+if (figma.currentPage.selection.length > 0) {
+  for (const node of figma.currentPage.selection) {
+    if (node.setRelaunchData && isLoomEmbedNode(node)) {
+      const relaunchData = node.getRelaunchData();
+      figma.showUI(__html__, { width: 800, height: 600 });
 
-if (loomNodes.length > 0 && figma.currentPage.selection.length === 0) {
-  const loomUrls = loomNodes.map(
-    (node) => node.children[2].children[1].hyperlink.value
-  );
-  figma.showUI(__html__, { width: 381, height: Math.min(800,loomUrls.length * 96 + 125) });
-  figma.ui.postMessage({ type: "embed", urls: loomUrls });
+      figma.ui.postMessage({
+        type: "view",
+        url: relaunchData.url,
+      });
+    }
+  }
 } else {
-  //get relaunch data
   figma.showUI(__html__, { width: 381, height: 81 });
 }
 
@@ -26,6 +29,7 @@ async function loadFonts() {
       family: "Arial",
       style: "Regular",
     }),
+    figma.loadFontAsync({ family: "Inter", style: "Bold" }),
   ]);
 }
 
@@ -52,36 +56,14 @@ figma.on("selectionchange", () => {
           type: "view",
           url: node.children[2].children[1].hyperlink.value,
         });
+
+        figma.ui.resize(800, 600);
       }
     }
   }
 });
 
 figma.ui.onmessage = async (msg) => {
-  if (msg.type === "view") {
-    const embeds = figma.currentPage.findChildren(
-      (n) => n.name === "Loom Embed"
-    );
-
-    const embedsToSend = [];
-
-    for (let i = 0; i < embeds.length; i++) {
-      const img = embeds[i].children[0].fills;
-      const title = embeds[i].children[1].characters;
-      const location = { x: embeds[i].x, y: embeds[i].y };
-      embedsToSend.push({ img, title, location });
-    }
-    figma.ui.postMessage({ type: "view", embeds: embedsToSend });
-    figma.ui.resize(800, 600);
-  }
-
-  if (msg.type === "move") {
-    figma.viewport.center = {
-      x: msg.location.x + 272,
-      y: msg.location.y + 204,
-    };
-  }
-
   if (msg.type === "create") {
     let shadow = figma
       .getLocalEffectStyles()
@@ -127,6 +109,7 @@ figma.ui.onmessage = async (msg) => {
     }
 
     data = msg.data;
+    console.log(data);
     let imageHash = figma.createImage(new Uint8Array(data.thumbnailHash)).hash;
     var parentFrame = figma.createFrame();
     parentFrame.effectStyleId = shadow.id;
@@ -134,11 +117,12 @@ figma.ui.onmessage = async (msg) => {
     parentFrame.primaryAxisSizingMode = "AUTO";
     parentFrame.name = "▶️ Loom Video";
     parentFrame.relativeTransform = [
-      [1, 0, 1004],
-      [0, 1, -25],
+      [1, 0, figma.viewport.center.x],
+      [0, 1, figma.viewport.center.y],
     ];
-    parentFrame.x = 1004;
-    parentFrame.y = -25;
+    parentFrame.x = figma.viewport.center.x;
+    parentFrame.y = figma.viewport.center.y;
+
     parentFrame.strokes = [
       {
         type: "SOLID",
@@ -154,7 +138,7 @@ figma.ui.onmessage = async (msg) => {
     figma.currentPage.appendChild(parentFrame);
 
     var thumbnail = figma.createRectangle();
-    thumbnail.resize(701.9738769531, 406.1926574707);
+    thumbnail.resize(571.0, 385.0);
     thumbnail.name = "Thumbnail";
     thumbnail.fills = [
       {
@@ -189,7 +173,7 @@ figma.ui.onmessage = async (msg) => {
     overlayRect.fillStyleId = darkOverlay.id;
     overlayRect.resize(571.0, 385.0);
     overlayRect.name = "Overlay";
-    overlayRect.opacity = 0.15000000596046448;
+    overlayRect.opacity = 0.15;
     overlayRect.constraints = { horizontal: "STRETCH", vertical: "STRETCH" };
     parentFrame.appendChild(overlayRect);
 
@@ -201,7 +185,7 @@ figma.ui.onmessage = async (msg) => {
     centerButton.effects = [
       {
         type: "DROP_SHADOW",
-        color: { r: 0, g: 0, b: 0, a: 0.30000001192092896 },
+        color: { r: 0, g: 0, b: 0, a: 0.3 },
         offset: { x: 0, y: 6 },
         radius: 24,
         spread: 0,
@@ -223,9 +207,9 @@ figma.ui.onmessage = async (msg) => {
         opacity: 1,
         blendMode: "NORMAL",
         color: {
-          r: 0.3803921639919281,
-          g: 0.3607843220233917,
-          b: 0.9607843160629272,
+          r: 0.38,
+          g: 0.36,
+          b: 0.96,
         },
       },
     ];
@@ -254,9 +238,9 @@ figma.ui.onmessage = async (msg) => {
         opacity: 1,
         blendMode: "NORMAL",
         color: {
-          r: 0.3803921639919281,
-          g: 0.3607843220233917,
-          b: 0.9607843160629272,
+          r: 0.38,
+          g: 0.36,
+          b: 0.96,
         },
       },
     ];
@@ -300,7 +284,7 @@ figma.ui.onmessage = async (msg) => {
     centerButton.appendChild(openIcon);
 
     var buttonOutline = figma.createVector();
-    buttonOutline.resize(23.9999675751, 23.9999752045);
+    buttonOutline.resize(24, 24);
     buttonOutline.fills = [
       {
         type: "SOLID",
@@ -1631,8 +1615,6 @@ figma.ui.onmessage = async (msg) => {
     text_1848_3265.x = 32;
     text_1848_3265.y = 4;
 
-    const font = await figma.loadFontAsync({ family: "Inter", style: "Bold" });
-
     loadFonts().then((res) => {
       text_1848_3265.fontName = {
         family: "Inter",
@@ -1641,9 +1623,10 @@ figma.ui.onmessage = async (msg) => {
 
       text_1848_3265.characters = data.title;
       text_1848_3265.fontSize = 14;
-      text_1848_3265.lineHeight = { unit: "PERCENT", value: 160.0000023841858 };
+      text_1848_3265.lineHeight = { unit: "PERCENT", value: 160.0 };
       text_1848_3265.fontName = { family: "Inter", style: "Bold" };
       text_1848_3265.textAutoResize = "WIDTH_AND_HEIGHT";
+      figma.closePlugin();
     });
     frame_1848_3263.appendChild(text_1848_3265);
   }

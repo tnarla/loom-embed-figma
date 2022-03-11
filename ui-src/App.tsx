@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as loomEmbedSDK from "@loomhq/loom-embed";
 import EmbedLoom from "./components/EmbedLoom";
 import ViewLoom from "./components/ViewLoom";
@@ -7,13 +7,7 @@ function App() {
   const [url, setUrl] = useState<string | undefined>();
   const [page, setPage] = useState("embed");
   const [selectedUrl, setSelectedUrl] = useState<string>();
-  const [existingUrls, setExistingUrls] = useState<string[]>();
 
-  useEffect(() => {
-    if (page === "view") {
-      parent.postMessage({ pluginMessage: { type: "view" } }, "*");
-    }
-  }, [page]);
 
   async function create() {
     if (!url) return;
@@ -33,30 +27,33 @@ function App() {
     );
   }
 
-  function move(embed: any) {
-    parent.postMessage(
-      { pluginMessage: { type: "move", location: embed.location } },
-      "*"
-    );
-  }
-
   window.addEventListener("message", async (event) => {
     const msg = event.data.pluginMessage.type;
     switch (msg) {
       case "view": {
-        setSelectedUrl(event.data.pluginMessage.url);  
+        setSelectedUrl(event.data.pluginMessage.url);
         setPage("view");
+        break;
       }
       case "embed": {
         setPage("embed");
-        setExistingUrls(event.data.pluginMessage.urls);
+        break;
       }
       default:
         break;
     }
   });
 
-  return page === "embed"?  <EmbedLoom setUrl={setUrl} create={create} urls={existingUrls} /> : <ViewLoom url={selectedUrl} />;
+  function goBack() {
+    setPage("embed");
+    // TODO: set height/ width back to normal height
+  }
+
+  return page === "embed" ? (
+    <EmbedLoom setUrl={setUrl} create={create} />
+  ) : (
+    <ViewLoom url={selectedUrl} goBack={goBack} />
+  );
 }
 
 export default App;
